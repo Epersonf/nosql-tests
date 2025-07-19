@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "lint": "eslint benchmark.js arangodb mongodb orientdb neo4j",
-    "data": "gunzip < data/bodies100000.json.gz > data/bodies100000.json"
+    "data": "npx decompress data/bodies100000.zip --out-dir=data"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "url": "https://github.com/weinberger/nosql-tests/issues"
   },
   "devDependencies": {
+    "decompress-cli": "^2.0.0",
     "eslint": "^0.22.1"
   },
   "dependencies": {
