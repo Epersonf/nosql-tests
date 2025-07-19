@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "lint": "eslint benchmark.js arangodb mongodb orientdb neo4j",
-    "data": "npx decompress data/bodies100000.zip --out-dir=data"
+    "data": "npx decompress data/bodies100000.zip --out-dir=data",
+    "import": "node arangodb/import.js"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,7 @@
     "eslint": "^0.22.1"
   },
   "dependencies": {
-    "arangojs": "5.8.0",
+    "arangojs": "^5.8.0",
     "async": "^2.5.0",
     "bluebird": "^3.5.0",
     "line-by-line": "^0.1.6",

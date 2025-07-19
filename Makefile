@@ -19,7 +19,7 @@ download-pokec:
 	curl -O http://snap.stanford.edu/data/soc-pokec-relationships.txt.gz
 
 import-data:
-	cd $(BENCH_DIR) && arangodb/import.bat
+	cd $(BENCH_DIR) && npm run import
 
 # Executa o benchmark contra o ArangoDB
 run-arangodb:
