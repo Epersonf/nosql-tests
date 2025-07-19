@@ -4,6 +4,9 @@ DB_DIR=$(BENCH_DIR)\databases
 DATA_DIR=$(BENCH_DIR)\data
 TMP_DIR=$(BENCH_DIR)\tmp/
 
+docker-up:
+	docker-compose up
+
 # Instala dependências Node.js (Node 18+ já deve estar no PATH)
 install-deps:
 	cd $(BENCH_DIR) && npm install
