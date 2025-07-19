@@ -28,7 +28,6 @@ const RELATIONS_IN = path.resolve(DOWNLOADS, 'soc-pokec-relationships.txt.gz');
   const gzStreamProfiles = fs.createReadStream(PROFILES_IN).pipe(zlib.createGunzip());
   const rlProfiles = readline.createInterface({ input: gzStreamProfiles });
 
-  let size = rlProfiles.length;
   let count = 0;
   for await (const line of rlProfiles) {
     count++;
