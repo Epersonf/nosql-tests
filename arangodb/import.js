@@ -1,3 +1,4 @@
+//@ts-check
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
@@ -8,7 +9,6 @@ const TMP = path.resolve('tmp');
 const DOWNLOADS = path.resolve(TMP, 'downloads');
 const PROFILES_IN = path.resolve(DOWNLOADS, 'soc-pokec-profiles.txt.gz');
 const RELATIONS_IN = path.resolve(DOWNLOADS, 'soc-pokec-relationships.txt.gz');
-const BATCH_SIZE = 100;
 
 const PROFILE_KEYS = [
   'public','completion_percentage','gender','region','last_login','registration','AGE','body',
@@ -30,14 +30,14 @@ async function promptInput(question) {
   });
 }
 
-async function batchInsert(lines, builder, saver, maxCount) {
+async function batchInsert(lines, builder, saver, maxCount, batchSize=50000) {
   const batch = [];
   let count = 0;
   for await (const line of lines) {
     if (maxCount && count >= maxCount) break;
     batch.push(builder(line));
     count++;
-    if (batch.length === BATCH_SIZE) {
+    if (batch.length === batchSize && batchSize > 0) {
       await Promise.all(batch.map(saver));
       batch.length = 0;
     }
@@ -48,6 +48,8 @@ async function batchInsert(lines, builder, saver, maxCount) {
 (async () => {
   const MAX_PROFILES = await promptInput('Qtd perfis (0 = all): ');
   const MAX_RELATIONS = await promptInput('Qtd relações (0 = all): ');
+  const BATCH_SIZE = await promptInput('Batch size: (0 = all)');
+
 
   const db = new Database({ url: 'http://127.0.0.1:8529' });
   const profiles = db.collection('profiles');
@@ -74,7 +76,8 @@ async function batchInsert(lines, builder, saver, maxCount) {
       return doc;
     },
     (doc) => profiles.save(doc).catch(e => console.error('Profile save error:', e.message)),
-    MAX_PROFILES
+    MAX_PROFILES,
+    BATCH_SIZE
   );
 
   console.log(`Importing up to ${MAX_RELATIONS || '∞'} relations...`);
@@ -91,7 +94,8 @@ async function batchInsert(lines, builder, saver, maxCount) {
       };
     },
     (doc) => relations.save(doc).catch(e => console.error('Relation save error:', e.message)),
-    MAX_RELATIONS
+    MAX_RELATIONS,
+    BATCH_SIZE
   );
 
   console.log('Importação finalizada com sucesso.');
